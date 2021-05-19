@@ -1,0 +1,117 @@
+INTRODUCTION:
+=============
+
+Serialization:
+--------------
+The proceess of writing state of an object to a file is called serialization, but stricly speaking it is the process of converting an object from java supported form into n/w or File Supported form.
+
+By using FileOutputStream and ObjectOutputStream classes we can achieve or implement Serilization.
+
+Deserialization:
+----------------
+The process of reading state of an object from the file is called deserialization, but strickly speaking it is the process of converting an object from either file supported from or N/w supported form into java supported form.
+
+By using FileInputStream and ObjectInputStram classes we can achieve or implement De-Serilization.
+
+Demo
+-----
+/*
+import java.io.*;
+
+class Dog implements Serializable{
+
+	int i=10, 
+	trainsent int j=20;
+}
+public class SerializationDemo {
+	public static void main(String[] args) throws Exception{
+		Dog d1= new Dog();
+		FileOutputStream fos= new FileOutputStream("D:/Local E/DURGA/Notes/Serilization/Demos/abc.ser",true);
+		ObjectOutputStream oos= new ObjectOutputStream(fos);
+		oos.writeObject(d1);
+
+		FileInputStream fis = new FileInputStream("D:/Local E/DURGA/Notes/Serilization/Demos/abc.ser");
+		ObjectInputStream ois= new ObjectInputStream(fis);
+		Dog d2= (Dog)ois.readObject();
+
+		System.out.println(d2.i+" "+d2.j);
+	}
+}
+*/
+
+We can serialize only serializable object, an object is said to be serializable if and only if corresponding class implements Serializable interface.Serializable interface is present in java.io package and it does,t contain any methods it is a marker interface. If we are trying to serialaize a non serializable object then we will get "RunTimeException:NotSerializableException".
+
+Trainsent Keyword:
+------------------
+
+Applicable only for variables but not for methods and classes.
+At the time of sserialization if we dont want to save the value of a particular variable to meet security constraint then we should declre the variable as transient, while performing serialization JVM ignores the orginal value of transient variable and save default value to the file.Hence transient means not to serialize.
+
+Transient v/s Static:
+----------------------
+static variable is not part of object state and hence it wont participate in serialization due to this declearing as trasnient there is no use.
+
+Final v/s Transient:
+---------------------
+final variables will be participated in serialization directly by the value , hence declareing a final variable as transient their is no impact.
+
+Note:
+-----
+We can serilalize any number of objects in a file, but in which ordre we serialize in yhe same order only we have to deserialize that's order od objects is important in Serialization.
+
+/*
+import java.io.*;
+
+class Dog implements Serializable{
+
+	int i=10, 
+	trainsent int j=20;
+}
+public class SerializationDemo1 {
+	public static void main(String[] args) throws Exception{
+		Dog d1= new Dog();
+		Cat c1= new Cat();
+		Rat r1= new Rat();
+		FileOutputStream fos= new FileOutputStream("D:/Local E/DURGA/Notes/Serilization/Demos/abc.ser",true);
+		ObjectOutputStream oos= new ObjectOutputStream(fos);
+		oos.writeObject(d1);
+		oos.writeObject(c1);
+		oos.writeObject(r1);
+		FileInputStream fis = new FileInputStream("D:/Local E/DURGA/Notes/Serilization/Demos/abc.ser");
+		ObjectInputStream ois= new ObjectInputStream(fis);
+		
+		Dog d2= (Dog)ois.readObject();
+		cat c2=(Cat)ois.readObject();
+		Rat r2=(Rat)ois.readObject();
+		//System.out.println(d2.i+" "+d2.j);
+	}
+}
+*/
+
+If we don't Know order of objects in serialization :
+-----------------------------------------------------
+
+/*
+	
+	FileInputStream fis= new FileInputStream("abs.ser");
+	ObjectInputStream oos= new ObjectInputStream(fis);
+
+	Object o=ois.readObject();
+	
+	if(o instanceOf Dog){
+		Dog d1=(Dog)o;
+		// perform ...
+	}
+	else if(o instanceOf Cat)
+	{
+		Cat c1=(Cat)o;
+		// perform ...
+
+	}
+	else if(o instanceOf Rat){
+		Rat r1=(Rat)o;
+			// perform ...
+	}
+
+*/
+

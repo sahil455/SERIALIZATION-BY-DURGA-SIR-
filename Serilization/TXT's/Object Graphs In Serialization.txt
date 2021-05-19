@@ -1,0 +1,36 @@
+Object Graphs In Serialization
+==============================
+Whenever we are serialize an object the set of all object which are reachable from the object will be serialize automatically this group of object is nothing but object graph. In Object Graph every object should be seializable if atleast one object is not serializable we will get RunTimeException: saying NotSerialzableException.
+
+Demo
+-----
+/* import java.io.*;
+
+class Dog implements Serialazable{
+	Cat c= new Cat();
+}
+class Cat implements Serialazable{
+	Rat r= new Rat();
+}
+class Rat implements Serialazable{
+	int j=12;
+}
+
+class SerialazationDemo2
+{
+	public static void main(String[] a)
+	{
+		Dog d1= new Dog();
+		FileOutputStream fos= new FileOutputStream("abs.ser");
+		ObjectOutputStream oos=new ObjectOutputStream(fos);
+		oos.writeObject(d1);
+
+		FileInputStream fis= new FileInputStream("abs.ser");
+		ObjectInputStraem ois= new ObjectInputStream(fis);
+		Dog d2=(Dog)ois.readObject();
+		System.out.println(d2.c.r.j);
+	}
+}
+*/
+
+In the above programme whenever we are serializing dog object automatically cat and rat objects got serialized because these are part of ObjectGraph of dogs.Among Dog Cat Rat objects if atleats is not serialzable then we will get RunTimeException: NotSerialzableException 

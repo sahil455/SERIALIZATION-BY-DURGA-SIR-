@@ -1,0 +1,115 @@
+Customized Serialization:
+===========================
+During default serialzation there may be a chance of loss of information because of transient keyword.
+/*
+import java.io.*;
+class CustSerialzationDemo{
+	public static void main(String[] args) {
+			Account a1= new Account();
+			FileOutpiuStream fos= new FileOutpiuStream("abc.ser");
+			ObjectOutputStream oos= new ObjectOutputStream(fos);
+			oos.writeObject(a1);
+
+			FileInputStream fis= new FileInputStream("absc.ser");
+			ObjectInputStream ois= new ObjectInputStream(fis);
+			Account a2=(Account)ois.readObject();
+			System.out.println(a2.username+" "+a2.password);
+	}
+}
+class Accout implements Serialzable {
+	String username="s";
+	transient String password="1";
+}*/
+
+In the above example before serialzation account object can provide proper username and password but after deserilazation account object can provide only username but password this is due to declearing password variable as transient. Hence during default serialzation there may be chance of loss of information because of transient kewyword to recover this loss of information we should go for Customized Seialization.
+
+We can implement customized serialization using following two meyhods:
+	
+	---> private void writeObject(ObjectOutputStream os) throws Exception :
+	     ------------------------------------------------------------------
+	     This method will be executed automatically at the time of seializaion hence a at the time of serialzation if you want to perform any activity we have to defined that in this method only.
+
+	---> private void readObject(ObjectInputStream os) throws Exception :
+	     ------------------------------------------------------------------
+	     This method will be exceuted automatically at the time of deseialization hence at the time of deseialization if you want to perform any activity we have to defined that in this method only.
+
+Note:
+-----
+- The above methods are Callback methods because this are executed automatically by JVM.
+
+- While performing which object seialization we have to extra work in the corresponding class we have to defined above methods. for eg: while performing Account object serialization if we required to do extra work in the Account class we have to define above methods.
+
+/*
+
+import java.io.*;
+class CustSerialzationDemo1{
+	public static void main(String[] args) {
+			Account a1= new Account();
+			FileOutpiuStream fos= new FileOutpiuStream("abc.ser");
+			ObjectOutputStream oos= new ObjectOutputStream(fos);
+			oos.writeObject(a1);
+
+			FileInputStream fis= new FileInputStream("absc.ser");
+			ObjectInputStream ois= new ObjectInputStream(fis);
+			Account a2=(Account)ois.readObject();
+			System.out.println(a2.username+" "+a2.password);
+	}
+}
+class Accout implements Serialzable {
+	String username="s";
+	transient String password="1";
+	private void writeObject(ObjectOutputStream os) throws Exception{
+		os.defaultWriteObject();
+		String epwd="123"+password;
+		os.writeObject(epwd);
+	}
+	private void readObject(ObjectInputStream is) throws Exception{
+		is.defaultReadObject();
+		String epwd=(String)is.readObject();
+		password=epwd.substring(3);
+	}
+}
+*/
+
+In the above programe before serialaztion and after serialzation acclont object can provide proper username and Password.
+ 
+Note:
+-----
+Programmer can't call private methods directly outside of the class but JVM can call private methods() directly
+from outside of the class.
+
+/*
+import java.io.*;
+class CustSerialzationDemo2{
+	public static void main(String[] args) {
+			Account a1= new Account();
+			FileOutpiuStream fos= new FileOutpiuStream("abc.ser");
+			ObjectOutputStream oos= new ObjectOutputStream(fos);
+			oos.writeObject(a1);
+
+			FileInputStream fis= new FileInputStream("absc.ser");
+			ObjectInputStream ois= new ObjectInputStream(fis);
+			Account a2=(Account)ois.readObject();
+			System.out.println(a2.username+" "+a2.password+" "+a2.pin);
+	}
+}
+class Accout implements Serialzable {
+	String username="s";
+	transient String password="1";
+	transient int pin=1234;
+	private void writeObject(ObjectOutputStream os) throws Exception{
+		os.defaultWriteObject();
+		String epwd="123"+password;
+		int epin=4444+pin;
+		os.writeObject(epwd);
+		os.writeObject(epin);
+	}
+	private void readObject(ObjectInputStream is) throws Exception{
+		is.defaultReadObject();
+		String epwd=(String)is.readObject();
+		password=epwd.substring(3);
+		int epin=is.readInt();
+		pin=epin-4444;
+	}
+}
+*/
